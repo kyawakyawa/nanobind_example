@@ -55,14 +55,17 @@ nanobind_add_module(
   src/nanobind_example_ext.cpp
 )
 
-nanobind_add_stub(
-  nanobind_example_ext_stub
-  MODULE nanobind_example_ext
-  OUTPUT nanobind_example_ext.pyi
-  PYTHON_PATH $<TARGET_FILE_DIR:nanobind_example_ext>
-  DEPENDS nanobind_example_ext
-)
-
 # Install directive for scikit-build-core
 install(TARGETS nanobind_example_ext LIBRARY DESTINATION nanobind_example)
-install(FILES $<TARGET_FILE_DIR:nanobind_example_ext>/nanobind_example_ext.pyi DESTINATION nanobind_example)
+
+if (${Python_VERSION} VERSION_GREATER_EQUAL 3.11)
+  nanobind_add_stub(
+    nanobind_example_ext_stub
+    MODULE nanobind_example_ext
+    OUTPUT nanobind_example_ext.pyi
+    PYTHON_PATH $<TARGET_FILE_DIR:nanobind_example_ext>
+    DEPENDS nanobind_example_ext
+  )
+
+  install(FILES $<TARGET_FILE_DIR:nanobind_example_ext>/nanobind_example_ext.pyi DESTINATION nanobind_example)
+endif()
